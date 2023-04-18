@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Random Text from File</title>
+  </head>
+  <body>
+    <button type="button" onclick="loadText()">Load Text</button>
+    <button type="button" onclick="generateRandomText()">Generate Random Text</button>
+    <p id="output"></p>
+
+    <script>
+      var lines = []; // テキストファイルの行を格納する配列
+      var textPath = "typing.txt"; // テキストファイルのパス
+
+      function loadText() {
+        // XMLHttpRequestの作成
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', textPath, true);
+
+        // 読み込み完了時の処理
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            // テキストファイルを行ごとに配列に分割
+            lines = xhr.responseText.split('\n');
+          }
+        }
+
+        // エラー時の処理
+        xhr.onerror = function() {
+          console.log("Failed to load the text file.");
+        }
+
+        // リクエストの送信
+        xhr.send();
+      }
+
+      function generateRandomText() {
+        if (lines.length > 0) {
+          // 偶数行をランダムに選択
+          const evenIndex = Math.floor(Math.random() * (lines.length / 2)) * 2;
+          // 一つ目に選択した偶数行の次の奇数行を選択
+          const oddIndex = evenIndex + 1;
+          const output = document.getElementById('output');
+          output.innerHTML = `${lines[evenIndex]}<br>${lines[oddIndex]}`;
+        }
+      }
+    </script>
+  </body>
+</html>
